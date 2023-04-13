@@ -101,6 +101,7 @@ function renderWeatherInfo(response,city)
     const humidity = document.querySelector("[data-humidity]");
     const cloudiness = document.querySelector("[data-cloudiness]");
    
+    const tempe = parseInt(response?.main?.temp/10) ;
 
     //putting the fetched values in html elements
     cityName.innerText = response?.name;
@@ -109,7 +110,7 @@ function renderWeatherInfo(response,city)
     weatherIcon.src = `http://openweathermap.org/img/w/${response?.weather?.[0]?.icon}.png`;
 
     // res? temp.innerText = `${res}`:temp.innerText (`${response?.main?.temp} °C`)
-    city ? temp.innerText =`${response?.main?.temp/10} °C`: temp.innerText =`${response?.main?.temp} °C`
+    city ? temp.innerText =`${tempe} °C` : temp.innerText =`${response?.main?.temp} °C`
    ;
     // 
     windspeed.innerText = `${response?.wind?.speed} m/s`;
