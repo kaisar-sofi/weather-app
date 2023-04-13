@@ -61,7 +61,7 @@ searchForm.addEventListener("submit",(e)=>{
 async function fetcWeatherInfo(city){
 
     loadingScreen.classList.add("active");
-    
+    console.log(city)
     try{
       let weather = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${ap}`);
       if(!weather.ok)
@@ -71,7 +71,9 @@ async function fetcWeatherInfo(city){
       let result= await weather.json();
         loadingScreen.classList.remove("active");
         userInfoContainer.classList.add("active");
-        renderWeatherInfo(result);
+        let temp=result?.main?.temp/10
+        // console.log(temp)
+        renderWeatherInfo(result,city);
     }
     catch(err){
         loadingScreen.classList.remove("active");
@@ -87,8 +89,9 @@ async function fetcWeatherInfo(city){
 
 //renderweather-ON-UI
 
-function renderWeatherInfo(response)
+function renderWeatherInfo(response,city)
 {
+
     const cityName = document.querySelector("[data-cityName]");
     const countryIcon = document.querySelector("[data-countryIcon]");
     const desc = document.querySelector("[data-weatherDesc]");
@@ -97,13 +100,18 @@ function renderWeatherInfo(response)
     const windspeed = document.querySelector("[data-windspeed]");
     const humidity = document.querySelector("[data-humidity]");
     const cloudiness = document.querySelector("[data-cloudiness]");
+   
 
     //putting the fetched values in html elements
     cityName.innerText = response?.name;
     countryIcon.src = `https://flagcdn.com/144x108/${response?.sys?.country.toLowerCase()}.png`;
     desc.innerText = response?.weather?.[0]?.description;
     weatherIcon.src = `http://openweathermap.org/img/w/${response?.weather?.[0]?.icon}.png`;
-    temp.innerText = `${response?.main?.temp} °C`;
+
+    // res? temp.innerText = `${res}`:temp.innerText (`${response?.main?.temp} °C`)
+    city ? temp.innerText =`${response?.main?.temp/10} °C`: temp.innerText =`${response?.main?.temp} °C`
+   ;
+    // 
     windspeed.innerText = `${response?.wind?.speed} m/s`;
     humidity.innerText = `${response?.main?.humidity}%`;
     cloudiness.innerText = `${response?.clouds?.all}%`;
@@ -162,7 +170,8 @@ async function fetchUserWeatherInfo(coordinates)
         console.log(response);
         loadingScreen.classList.remove("active");
         userInfoContainer.classList.add("active");
-        renderWeatherInfo(response);
+        renderWeatherInfo(response)
+       
     }
     catch(e)
     {
